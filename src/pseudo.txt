@@ -1,0 +1,8 @@
+
+preguntas
+- why does it get called twice?
+- purpose of "type"?
+- displaying API data
+- what is id?
+- const vs function
+- export default?
