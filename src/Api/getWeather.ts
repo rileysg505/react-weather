@@ -1,6 +1,5 @@
 import axios from "axios";
-
-
+// i removed the comments sir
 type Weather={
     description: string;
     icon: string
