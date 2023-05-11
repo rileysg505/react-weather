@@ -19,7 +19,6 @@ const getWeather = async (city: string) => {
             description:weatherDescription,
             name:cityName
         };
-        console.log('results', results)
         return results;
     } catch (error) {
         console.log(error)

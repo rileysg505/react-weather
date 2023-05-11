@@ -7,9 +7,10 @@ function App() {
   const [city, setCity] = useState("");
   const [weatherData, setWeatherData] = useState<any>("");
 
-  useEffect(() => {
-    fetchWeatherData(city);
-  }, [city]);
+  const showWeatherData=() => {
+    console.log('city:', city)
+    fetchWeatherData(city)
+  }
 
   const fetchWeatherData = async (city: string) => {
     try {
@@ -23,16 +24,14 @@ function App() {
   return (
     <div className="App">
       <h1>Weather</h1>
-      <form>
-        <input
+      <input
           id="new-location-input"
           type="text"
           placeholder="Enter City Name"
           value={city}
           onChange={(event) => setCity(event.target.value)}
           />
-      <button type="submit" id="search-button">Search</button>
-      </form>
+      <button onClick={showWeatherData}>Search</button>
       {weatherData ? (
         <div>
           <h2>Information</h2>
