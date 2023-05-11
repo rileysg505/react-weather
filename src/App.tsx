@@ -1,45 +1,51 @@
-import React, {useEffect, useState } from "react";
-import { ChangeEvent } from 'react';
+import React, { useEffect, useState } from "react";
 import getWeather from "./Api/getWeather";
 import "./App.css";
 
+
 function App() {
-  const [searchCityInput, setSearchCity] = useState('')
-  const [weather, setWeather] = useState(); // weather is current value of state, setWeather is function to update the state
+  const [city, setCity] = useState("");
+  const [weatherData, setWeatherData] = useState<any>("");
 
   useEffect(() => {
-    getWeather(); // returns weatherData
-  }, []); // tells useEffect to only render if certain values change
+    fetchWeatherData(city);
+  }, [city]);
 
-  function changeCity(input: React.SetStateAction<undefined>) {
-    setWeather(input)
-  }
-  // const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const newValue = e.currentTarget.value;
-  // }
-
+  const fetchWeatherData = async (city: string) => {
+    try {
+      const data = await getWeather(city);
+      setWeatherData(data)
+    } catch (error) {
+      console.log('Error fetching weather data:', error);
+    }
+  };
 
   return (
     <div className="App">
-      <h1>Weather: {searchCityInput} </h1>
-      <h2>{getWeather}</h2>
-      <form id ='new-location-form'>
-        <input id='new-location-input'
-          type='text'
-          placeholder='Enter City Name'
-          value = {searchCityInput} 
-          onChange={(location) => setSearchCity(location.target.value)} />
+      <h1>Weather</h1>
+      <form>
+        <input
+          id="new-location-input"
+          type="text"
+          placeholder="Enter City Name"
+          value={city}
+          onChange={(event) => setCity(event.target.value)}
+          />
+      <button type="submit" id="search-button">Search</button>
       </form>
-        <button id = "search-location-button" 
-          onClick={() => setSearchCity}> Search </button>
-      <ol className = 'list weather data'>
-          
-
-      </ol>
+      {weatherData ? (
+        <div>
+          <h2>Information</h2>
+          <p>City: {weatherData.name}</p>
+          <p>Temperature: {weatherData.temp.temp}°C</p>
+          <p>Description: {weatherData.description[0]['description']}</p>
+        </div>
+      ) : (
+        <p></p>
+      )}
     </div>
-
+    
   );
-}
-
+};
 
 export default App;
