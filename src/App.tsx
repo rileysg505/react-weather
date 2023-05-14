@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+import getCoords from "./Api/getWeather";
 import getWeather from "./Api/getWeather";
+import {WeatherDataType} from "./Api/getWeather";
 import "./App.css";
 
 
@@ -8,14 +10,16 @@ function App() {
   const [weatherData, setWeatherData] = useState<any>("");
 
   const showWeatherData=() => {
-    console.log('city:', city)
     fetchWeatherData(city)
   }
 
   const fetchWeatherData = async (city: string) => {
     try {
-      const data = await getWeather(city);
-      setWeatherData(data)
+      const coords: WeatherDataType = await getCoords(city);
+      console.log(coords.lat, coords.lon) // returns correct numbers
+      console.log('type', typeof(coords.lat), typeof(coords.lon)); // returns number number
+      const data = await getWeather(coords.lat, coords.lon);
+      setWeatherData(coords)
     } catch (error) {
       console.log('Error fetching weather data:', error);
     }
@@ -35,9 +39,9 @@ function App() {
       {weatherData ? (
         <div>
           <h2>Information</h2>
-          <p>City: {weatherData.name}</p>
-          <p>Temperature: {weatherData.temp.temp}°C</p>
-          <p>Description: {weatherData.description[0]['description']}</p>
+          {/* <p>City: {weatherData.name}</p> */}
+          {/* <p>Temperature: {weatherData.temp.temp}°C</p> */}
+          {/* <p>Description: {weatherData.description[0]['description']}</p> */}
         </div>
       ) : (
         <p></p>
