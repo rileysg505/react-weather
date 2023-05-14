@@ -1,45 +1,54 @@
-import React, {useEffect, useState } from "react";
-import { ChangeEvent } from 'react';
+import React, { useEffect, useState } from "react";
+import getCoords from "./Api/getWeather";
 import getWeather from "./Api/getWeather";
+import {WeatherDataType} from "./Api/getWeather";
 import "./App.css";
 
+
 function App() {
-  const [searchCityInput, setSearchCity] = useState('')
-  const [weather, setWeather] = useState(); // weather is current value of state, setWeather is function to update the state
+  const [city, setCity] = useState("");
+  const [weatherData, setWeatherData] = useState<any>("");
 
-  useEffect(() => {
-    getWeather(); // returns weatherData
-  }, []); // tells useEffect to only render if certain values change
-
-  function changeCity(input: React.SetStateAction<undefined>) {
-    setWeather(input)
+  const showWeatherData=() => {
+    fetchWeatherData(city)
   }
-  // const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const newValue = e.currentTarget.value;
-  // }
 
+  const fetchWeatherData = async (city: string) => {
+    try {
+      const coords: WeatherDataType = await getCoords(city);
+      console.log(coords.lat, coords.lon) // returns correct numbers
+      console.log('type', typeof(coords.lat), typeof(coords.lon)); // returns number number
+      const data = await getWeather(coords.lat, coords.lon);
+      setWeatherData(coords)
+    } catch (error) {
+      console.log('Error fetching weather data:', error);
+    }
+  };
 
   return (
     <div className="App">
-      <h1>Weather: {searchCityInput} </h1>
-      <h2>{getWeather}</h2>
-      <form id ='new-location-form'>
-        <input id='new-location-input'
-          type='text'
-          placeholder='Enter City Name'
-          value = {searchCityInput} 
-          onChange={(location) => setSearchCity(location.target.value)} />
-      </form>
-        <button id = "search-location-button" 
-          onClick={() => setSearchCity}> Search </button>
-      <ol className = 'list weather data'>
-          
-
-      </ol>
+      <h1>Weather</h1>
+      <input
+          id="new-location-input"
+          type="text"
+          placeholder="Enter City Name"
+          value={city}
+          onChange={(event) => setCity(event.target.value)}
+          />
+      <button onClick={showWeatherData}>Search</button>
+      {weatherData ? (
+        <div>
+          <h2>Information</h2>
+          {/* <p>City: {weatherData.name}</p> */}
+          {/* <p>Temperature: {weatherData.temp.temp}°C</p> */}
+          {/* <p>Description: {weatherData.description[0]['description']}</p> */}
+        </div>
+      ) : (
+        <p></p>
+      )}
     </div>
-
+    
   );
-}
-
+};
 
 export default App;
