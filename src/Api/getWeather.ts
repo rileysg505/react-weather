@@ -1,12 +1,17 @@
 import axios from "axios";
 
-export type WeatherDataType={
+export type Coordinates={
     lat:number,
     lon:number
 }
 
+export type WeeklyWeather={
+    date:Date,
+    max:number,
+    min:number
+}
 
-const getCoords = async (city: string) => { 
+export const getCoords = async (city: string) => { 
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}
                 &appid=7fcec942249fb43b45edd62ab7ead6a9`
     
@@ -15,11 +20,10 @@ const getCoords = async (city: string) => {
         const dataLat = response.data.coord.lat
         const dataLon = response.data.coord.lon
 
-        const coords: WeatherDataType = {
+        const coords: Coordinates = {
             lat: dataLat,
             lon: dataLon
         };
-        console.log('r', coords)
         return coords;
     } catch (error) {
         console.log(error)
@@ -27,16 +31,26 @@ const getCoords = async (city: string) => {
     }
 }
 
-const getWeather = async (Latitude: number, Longitude: number) => {
-    const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${Latitude}
-                &lon=${Longitude}&exclude=alerts&appid=7fcec942249fb43b45edd62ab7ead6a9`
+export const getWeather = async (lat: number, lon: number) => {
+    const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=imperial&exclude=hourly,minutely&appid=7fcec942249fb43b45edd62ab7ead6a9`
     try{
-        const response = await axios.get(url)
+        const response =  await axios.get(url)
+        const daily_weather = response.data.daily
         console.log('response:,', response)
+        const output_results = []
+        for (const weather of daily_weather) {
+            // console.log('max & min:', weather.temp.max, weather.temp.min)
+            const weeklydata: WeeklyWeather={
+                date: new Date(weather.dt * 1000),
+                max: weather.temp.max,
+                min: weather.temp.min
+            };
+            output_results.push(weeklydata)
+        }
+        return output_results
     } catch (error) {
         console.log(error)
         throw new Error("Failed to fetch weather data")
     }
 }
 
-export default getCoords;

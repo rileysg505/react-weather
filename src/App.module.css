@@ -1,0 +1,40 @@
+.data{
+    display:flex;
+    flex-direction: row;
+    gap: 20px;
+    padding: 10px;
+    margin-left: 35px;
+}
+
+.Weather {
+    display: flex;
+    flex-direction: row;
+    /* gap: 1px; */
+    margin-left: 35px;
+    color: black;
+
+    font-size: 40px
+}
+
+.btn {
+    background-color: #FFC7D8;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    /* margin-left: 10px; */
+}
+
+.Input {
+    margin-left: 35px;
+    width: 300px;
+    height: 15px;
+
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    padding: 5px;
+    margin-bottom: 10px;
+}
